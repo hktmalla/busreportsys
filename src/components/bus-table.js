@@ -1,44 +1,56 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
-
-import {bindActionCreators} from 'redux';
-import { userClick } from '../actions/user-click';
-
 import '../App.css';
+import Table from './Table'
+import Table2 from './Table2';
+
+var jsonData = require('../data/json-data.json');
 
 class BusData extends Component{
-    displayData(){
-    	return this.props.data.map((data1, index)=>{
-    		return(
-    			    <div className = "container" onClick={()=>this.props.userClick(data1)}>
-    			        			       <center>
-    			    	    			        <h3>{data1.organisation}</h3>
-    			    	    			        <h3>{data1.date}</h3>
-    			        			        </center>
-    			        			     </div>
-    			        			);
-    	});
-    }
+	constructor(props){
+		super(props);
+		this.state = {
+			isHidden : false,
+			isHidden1 : false
+		}
+		this.hadleClick = this.hadleClick.bind(this);
+		this.hadleClick1 = this.hadleClick1.bind(this);
+	}
+    /* this is used to handle  div click */
+	hadleClick(){
+		this.setState({isHidden: !this.state.isHidden});
+	}
+	hadleClick1(){//this event is for the for display table 
+		this.setState({isHidden1 : !this.state.isHidden1});
+	}
+
 	render(){
 		return(
-			   <div>
-			       {this.displayData()}
-			   </div>
+
+				<div>
+				       <center>
+					       <div className="header">
+					            Bus Reports
+				           </div>
+				        </center>
+				       <div onClick={this.hadleClick}>
+				       <center>
+				          <div className="clickheader">
+					           {jsonData.data[0].organisation}
+				          </div>
+				        </center>
+				       </div>
+				   {this.state.isHidden ? <Table2 /> : null} 
+				   <div onClick={this.hadleClick1}>
+				       <center>
+				          <div className="clickheader">
+					           {jsonData.data[1].organisation}
+				          </div>
+				        </center>
+				       </div>
+				   {this.state.isHidden1 ? <Table /> : null}
+				</div> 
 			);
 	}
 }
 
-function mapStateToProps(state){
-	return {
-		data : state.data
-	}
-}
-
-function matchDispatchToProps(dispatch){
-	return bindActionCreators({
-		userClick : userClick
-	}, dispatch)
-}
-
-
-export default connect(mapStateToProps, matchDispatchToProps)(BusData);
+export default BusData;
